@@ -1,9 +1,14 @@
-#!/bin/bash
+ #!/bin/bash
 
-#Swayidle Timing 
-swayidle \
-    timeout 900 'hyprctl dispatch dpms off' \
-    resume 'hyprctl dispatch dpms on' & 
- swaylock -c 000000ff --image ~/Downloads/bgpp.jpg
- kill %%
- 
+# If idle for 15s, power down the output
+swayidle -w \
+		timeout 15 'swaymsg "output * dpms off"' \
+		resume 'swaymsg "output * dpms on"' &
+
+
+# Lock screen immediately
+swaylock --image ~/.config/swww/wall.set
+
+
+# Kill the last instance of swayidle so the timer doesn't keep running in background
+pkill --newest swayidle
