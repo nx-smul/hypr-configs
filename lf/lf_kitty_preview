@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+bat --color always "$1"
+
 file=$1
 w=$2
 h=$3
@@ -40,7 +42,9 @@ case "$(basename "$file" | tr '[A-Z]' '[a-z]')" in
 	convert "$file" "$thumbnail"
 	preview "$thumbnail"
 	;;
-*) lf_bat_preview "$file" ;;
+*) bat "$file" ;;
 esac
 return 127 # nonzero retcode required for lf previews to reload
+
+text/*; bat '%s'; needsterminal; print=less '%s';
 
