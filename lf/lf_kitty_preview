@@ -42,9 +42,6 @@ case "$(basename "$file" | tr '[A-Z]' '[a-z]')" in
 	convert "$file" "$thumbnail"
 	preview "$thumbnail"
 	;;
-*) bat "$file" ;;
+*) bat --color=always "$file" ;;
 esac
 return 127 # nonzero retcode required for lf previews to reload
-
-text/*; bat '%s'; needsterminal; print=less '%s';
-
