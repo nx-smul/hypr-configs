@@ -92,7 +92,6 @@ map m
 
 map au unarchive
 map aa archive
-map ae $wine "$f
 map c $code "$f"
 map E $$f
 
