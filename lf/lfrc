@@ -83,13 +83,7 @@ cmd restore_trash ${{
 }}
 
 cmd trash_delete ${{
-  trash-list
-set -f
-     printf "Clean Trash?[y/n]"
-     read ans
-     [ "$ans" = "y" ] && trash-empty
-  done
-
+  trash-list && trash-empty
 }}
 
 # Bindings
