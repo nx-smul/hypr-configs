@@ -1,6 +1,7 @@
 set previewer ~/.config/lf/lf_kitty_preview
 set cleaner ~/.config/lf/lf_kitty_clean
 
+
 # Basic Settings
 set hidden true
 set ignorecase true
@@ -59,32 +60,37 @@ cmd unarchive ${{
 }}
 
 # Trash bindings
-cmd delete ${{
-     set -f
+cmd trash ${{
+  files=$(printf "$fx" | tr '\n' ';')
+  while [ "$files" ]; do
+    file=${files%%;*}
+
+  set -f
      printf "$fx\n"
      printf "Put this into Trash?[y/n]"
      read ans
-     [ "$ans" = "y" ] && trash-put $fx
- }}
-
-#cmd trash ${{
-#  files=$(printf "$fx" | tr '\n' ';')
-#  while [ "$files" ]; do
-#    file=${files%%;*}
-#
-#    trash-put "$(basename "$file")"
-#    if [ "$files" = "$file" ]; then
-#      files=''
-#    else
-#      files="${files#*;}"
-#    fi
-#  done
-#}}
+     [ "$ans" = "y" ] && trash-put "$(basename "$file")"
+    if [ "$files" = "$file" ]; then
+      files=''
+    else
+      files="${files#*;}"
+    fi
+  done
+}}
 
 cmd restore_trash ${{
   trash-restore
 }}
 
+cmd trash_delete ${{
+  trash-list
+set -f
+     printf "Clean Trash?[y/n]"
+     read ans
+     [ "$ans" = "y" ] && trash-empty
+  done
+
+}}
 
 # Bindings
 map d
@@ -92,15 +98,17 @@ map m
 
 map au unarchive
 map aa archive
-map ae $wine "$f"
-map c $vscodium "$f"
+map ae $wine "$f
+map c $code "$f"
 map E $$f
 
 # Basic Functions
 map ~ shell
 map . set hidden!
-map dd delete
+map dd trash
 map dr restore_trash
+map dt trash_delete
+
 map p paste
 map x cut
 map y copy
@@ -119,9 +127,10 @@ map gl ${{clear; git log --graph --pretty=format:'%Cred%h% Creset -%C(yellow)%d%
 
 
 # Movement
-map dgD cd ~/documents
-map dgd cd ~/downloads
-map dgp cd ~/pictures
+map dgh cd ~/
+map dgD cd ~/Documents
+map dgd cd ~/Downloads
+map dgp cd ~/Pictures
 map dgc cd ~/.config
 map dgr cd ~/repos
 map dgv cd ~/videos
