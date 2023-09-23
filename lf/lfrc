@@ -117,7 +117,7 @@ map R reload
 map mf mkfile
 map md mkdir
 map C clear
-map <f2> push :rename<space>
+map <f-2> push :rename<space>
 
 #git commands 
 map gb :git_branch
