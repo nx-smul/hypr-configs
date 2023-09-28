@@ -9,3 +9,5 @@ tty-clock
 cava
 packagekit-qt5
 swayidle
+nvim
+lf
