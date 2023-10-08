@@ -97,7 +97,7 @@ map c $code "$f"
 map E $$f
 
 # Basic Functions
-map ~ shell
+map ` shell
 map . set hidden!
 map dd trash
 map dr restore_trash
