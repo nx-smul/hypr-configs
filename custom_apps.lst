@@ -26,3 +26,4 @@ libadwaita-without-adwaita-git
 acpi
 xdg-desktop-portal-gtk
 nwg-displays
+wlr-randr
