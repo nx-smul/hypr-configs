@@ -59,7 +59,7 @@ sleep 1
 # Install essential packages
 echo "Installing Linux"
 sleep 1
-pacstrap /mnt base linux linux-firmware sof-firmware intel-ucode amd-ucode
+pacstrap /mnt base linux linux-firmware sof-firmware intel-ucode amd-ucode sbctl
 sleep 1
 # Generate an fstab file
 genfstab -U /mnt > /mnt/etc/fstab
