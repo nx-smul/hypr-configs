@@ -124,4 +124,4 @@ pacman -Sy --noconfirm vim git wget curl
 
 EOF
 sleep 1
-echo "Install has been reboot now"
+echo "Install has been complete reboot now"
