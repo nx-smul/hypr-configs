@@ -98,9 +98,9 @@ sleep 2
 
 echo "Checking CPU vendor and model ..."
 sleep 2
-CPU_VENDOR=$(lscpu | grep 'Vendor ID' | awk '{print $3}')
+CPU_VENDOR=$(lscpu | grep 'Vendor ID' | awk '{print $3}'| sed -n '1p')
 CPU_MODEL=$(lscpu | grep 'Model name' | awk '{print $3,$4,$5,$6,$7,$8,$9}')
-echo "Your CPU vendor is %s and your CPU model is %s" "$CPU_VENDOR" "$CPU_MODEL"
+echo "Your CPU vendor is $CPU_VENDOR and your CPU model is $CPU_MODEL"
 sleep 2
 
 # Install ucode package
@@ -124,29 +124,34 @@ arch-chroot /mnt /bin/bash <<EOF
 echo "Setting up system ..."
 sleep 2
 
-# Set the system clock
+
+# Set timezone
 ln -sf /usr/share/zoneinfo/"$TIMEZONE" /etc/localtime
 hwclock --systohc
-sleep 1
 
-# Generate locales
+# Set locale
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
-sleep 1
 
-# Set the hostname
-echo "%s" "$HOSTNAME" >> /etc/hostname
-sleep 1
+# Set hostname
+echo "$HOSTNAME" > /etc/hostname
 
-# Configure hosts file
-echo "127.0.0.1  localhost" >> /etc/hosts
-echo "::1        localhost" >> /etc/hosts
-echo "127.0.0.1  %s.localdomain  %s" "$HOSTNAME" "$HOSTNAME" >> /etc/hosts
+# Set hosts
+echo "127.0.0.1 localhost" >> /etc/hosts
+echo "::1 localhost" >> /etc/hosts
+echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >> /etc/hosts
 
 # Set root password
-echo "root:%s"$ROOT_PASSWORD" | chpasswd
-sleep 1
+echo "root:$ROOT_PASSWORD" | chpasswd
+
+# Create user and set password
+useradd -m -G wheel "$USERNAME"
+echo "$USERNAME:$USER_PASSWORD" | chpasswd
+
+# Enable sudo for user
+echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/"$USERNAME"
+
 
 # Install and configure bootloader (GRUB in this example)
 echo "Setting grub ..."
@@ -155,17 +160,6 @@ pacman -Sy --noconfirm grub efibootmgr dosfstools os-prober mtools
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch --modules="tpm" --disable-shim-lock
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 1
-
-# Create a new user
-echo "Setting up user for first boot ..."
-sleep 2
-useradd -m -G wheel "$USERNAME"
-
-# Set a password for the new user
-echo "%s:%s" "$USERNAME" "$USER_PASSWORD" | chpasswd
-
-# Enable sudo for the new user
-echo "%%wheel ALL=(ALL) ALL" > /etc/sudoers.d/"$USERNAME"
 
 # Enable NetworkManager
 echo "Enabling NetworkManager"
