@@ -124,7 +124,6 @@ arch-chroot /mnt /bin/bash <<EOF
 echo "Setting up system ..."
 sleep 2
 
-
 # Set timezone
 ln -sf /usr/share/zoneinfo/"$TIMEZONE" /etc/localtime
 hwclock --systohc
@@ -151,6 +150,14 @@ echo "$USERNAME:$USER_PASSWORD" | chpasswd
 
 # Enable sudo for user
 echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/"$USERNAME"
+echo ""
+sleep 2
+
+#reflector install
+echo "Setting up mirrors ..."
+pacman -Sy --noconfirm reflector
+reflector --verbose --latest 100 -p http --age 18 --connection-timeout 1 --save /etc/pacman.d/mirrorlist
+sleep 2
 
 
 # Install and configure bootloader (GRUB in this example)
