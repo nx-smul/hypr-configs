@@ -164,11 +164,11 @@ sleep 1
 # Enable NetworkManager
 echo "Enabling NetworkManager"
 sleep 2
-pacman -S --noconfirm networkmanager
+pacman -S --needed networkmanager
 systemctl enable NetworkManager
 
 # Install additional packages
-pacman -S vim git wget curl
+pacman -S --noconfirm vim git wget curl
 
 EOF
 sleep 1
